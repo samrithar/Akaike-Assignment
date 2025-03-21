@@ -1,0 +1,5 @@
+# space.yaml
+title: "News Summarization & Sentiment Analysis"
+sdk: "docker"
+app_file: "api.py"
+runtime: "python3"
