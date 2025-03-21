@@ -1,6 +1,6 @@
 import requests
 
-API_KEY = 28d6a2c6208c400d84d3e303d9ec7158  # Replace with your actual API key
+API_KEY = "28d6a2c6208c400d84d3e303d9ec7158"  # Replace with your actual API key
 
 def extract_news(company):
     """
