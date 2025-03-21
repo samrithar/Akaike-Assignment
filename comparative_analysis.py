@@ -1,45 +1,27 @@
-def comparative_analysis(articles):
+from text_to_speech import text_to_speech
+
+def generate_sentiment_summary(articles):
     """
-    Conduct comparative sentiment analysis across multiple articles.
+    Generate a Hindi summary based on the sentiment analysis results and convert to speech.
 
     Args:
     articles (list): List of articles with sentiment labels.
 
     Returns:
-    dict: A structured comparison of sentiment distribution.
+    dict: Summary text and audio file path.
     """
-    sentiment_count = {"POSITIVE": 0, "NEGATIVE": 0, "NEUTRAL": 0}
+    sentiment_result = comparative_analysis(articles)
+    
+    # Generate Hindi summary text
+    sentiment_text = "कंपनी की खबरें इस प्रकार हैं:\n"
+    sentiment_text += f"सकारात्मक खबरें: {sentiment_result['Sentiment Distribution']['POSITIVE']}\n"
+    sentiment_text += f"नकारात्मक खबरें: {sentiment_result['Sentiment Distribution']['NEGATIVE']}\n"
+    sentiment_text += f"तटस्थ खबरें: {sentiment_result['Sentiment Distribution']['NEUTRAL']}\n"
 
-    for article in articles:
-        sentiment = article["sentiment"]
-        if sentiment in sentiment_count:
-            sentiment_count[sentiment] += 1
+    if sentiment_result["Insights"]:
+        sentiment_text += f"निष्कर्ष: {sentiment_result['Insights'][0]}\n"
 
-    # Generate insights
-    insights = []
-    if sentiment_count["POSITIVE"] > sentiment_count["NEGATIVE"]:
-        insights.append("The majority of news articles are positive, indicating favorable media coverage.")
-    elif sentiment_count["NEGATIVE"] > sentiment_count["POSITIVE"]:
-        insights.append("The majority of news articles are negative, suggesting concerns or controversies.")
-    else:
-        insights.append("News coverage is balanced with mixed opinions.")
+    # Convert text to speech
+    audio_file = text_to_speech(sentiment_text)
 
-    # Identify common and unique topics
-    common_topics = set()
-    unique_topics = []
-
-    for article in articles:
-        if "topics" in article:
-            article_topics = set(article["topics"])
-            if common_topics:
-                common_topics.intersection_update(article_topics)
-            else:
-                common_topics = article_topics
-            unique_topics.append(article_topics)
-
-    return {
-        "Sentiment Distribution": sentiment_count,
-        "Insights": insights,
-        "Common Topics": list(common_topics),
-        "Unique Topics": unique_topics,
-    }
+    return {"summary": sentiment_text, "audio": audio_file}
